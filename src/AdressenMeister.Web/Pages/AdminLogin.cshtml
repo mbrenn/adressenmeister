@@ -1,0 +1,21 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Login";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Login wird durchgeführt</h1>
+    
+    <form method="POST">
+        <div class="form-group col-sm">
+            <label for="user">Benutzer</label>
+            <input name="user" id="user" class="form-control" placeholder="Dein Name"/>
+        </div>
+        <div class="form-group col-sm">
+            <label for="password">Kennwort</label>
+            <input id="password" name="password" type="password" class="form-control" placeholder="Kennwort"/>
+        </div>
+        <button type="submit" name="login" value="1" class="btn btn-primary">Anmelden</button>
+    </form>
+</div>
