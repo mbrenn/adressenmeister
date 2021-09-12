@@ -54,7 +54,7 @@ namespace AdressenMeister.Web
             TypeUser = localTypeManager.AddInternalType("AdressenMeister", typeof(AdressenUser));
         }
 
-        public IElement CreateUser(AdressenUser? user)
+        public IElement CreateUser(AdressenUser? user = null)
         {
             if (AdressenExtent == null) throw new InvalidOperationException();
             
