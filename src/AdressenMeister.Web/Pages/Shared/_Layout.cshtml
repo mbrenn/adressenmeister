@@ -22,21 +22,27 @@
                 {
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-page="/Index">Home</a>
+                            <a class="nav-link text-dark" asp-page="/User">Alle Mitglieder</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-page="/Privacy">Privacy</a>
+                            <a class="nav-link text-dark" asp-page="/UserChange">Deine Daten</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-page="/Logout">Logout</a>
                         </li>
                     </ul>
                 }
-                else
+                else if (((ViewBag.Mode as PageSection?) ?? PageSection.Admin) == PageSection.Admin)
                 {
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-page="/Index">Home</a>
+                            <a class="nav-link text-dark" asp-page="/Admin">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-page="/Privacy">New Mails</a>
+                            <a class="nav-link text-dark" asp-page="/AdminNew">New Mails</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-page="/Logout">Logout</a>
                         </li>
                     </ul>
                 }

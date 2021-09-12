@@ -2,6 +2,7 @@
 {
     public enum PageSection
     {
+        None,
         User,
         Admin
     }

@@ -45,6 +45,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DatenMeister.Provider.CSV",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DatenMeister.TextTemplates", "..\modules\datenmeister-new\src\DatenMeister.TextTemplates\DatenMeister.TextTemplates.csproj", "{EB848A9D-EF97-427B-B19C-633207000E4D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DatenMeister.AdminUserSettings", "..\modules\datenmeister-new\src\DatenMeister.AdminUserSettings\DatenMeister.AdminUserSettings.csproj", "{EFD722D6-092A-44FB-B166-E200A108DF20}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -166,6 +168,12 @@ Global
 		{EB848A9D-EF97-427B-B19C-633207000E4D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{EB848A9D-EF97-427B-B19C-633207000E4D}.ViewLogicAdditional|Any CPU.ActiveCfg = Debug|Any CPU
 		{EB848A9D-EF97-427B-B19C-633207000E4D}.ViewLogicAdditional|Any CPU.Build.0 = Debug|Any CPU
+		{EFD722D6-092A-44FB-B166-E200A108DF20}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EFD722D6-092A-44FB-B166-E200A108DF20}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EFD722D6-092A-44FB-B166-E200A108DF20}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EFD722D6-092A-44FB-B166-E200A108DF20}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EFD722D6-092A-44FB-B166-E200A108DF20}.ViewLogicAdditional|Any CPU.ActiveCfg = Debug|Any CPU
+		{EFD722D6-092A-44FB-B166-E200A108DF20}.ViewLogicAdditional|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -189,6 +197,7 @@ Global
 		{5073608F-D10E-4DCC-A18B-DF9FD713D543} = {01140427-CF0A-4850-BD3A-C5AE732CCEF7}
 		{D742850B-F3D8-459E-9ECE-84921C0B4714} = {01140427-CF0A-4850-BD3A-C5AE732CCEF7}
 		{EB848A9D-EF97-427B-B19C-633207000E4D} = {01140427-CF0A-4850-BD3A-C5AE732CCEF7}
+		{EFD722D6-092A-44FB-B166-E200A108DF20} = {01140427-CF0A-4850-BD3A-C5AE732CCEF7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B2125E76-F4A2-43D8-862B-94608925429C}

@@ -1,19 +1,12 @@
 ﻿@page
-@model AdressenMeister.Web.Pages.AdminNew
-
+@using AdressenMeister.Web.Models
+@model AdminNew
 @{
-    Layout = null;
+    ViewData["Title"] = "Admin-Bereich";
+    ViewBag.Mode = PageSection.Admin;
 }
 
-<!DOCTYPE html>
-
-<html>
-<head>
-    <title></title>
-</head>
-<body>
-<div>
-    
+<div class="text-center">
+    <h1 class="display-4">Willkommen zu neuen Adressen:</h1>
+    <p>Dein Benutzerbereich</p>
 </div>
-</body>
-</html>

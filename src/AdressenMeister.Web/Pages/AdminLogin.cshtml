@@ -1,5 +1,5 @@
 ﻿@page
-@model IndexModel
+@model AdminLogin
 @{
     ViewData["Title"] = "Login";
 }
@@ -17,5 +17,11 @@
             <input id="password" name="password" type="password" class="form-control" placeholder="Kennwort"/>
         </div>
         <button type="submit" name="login" value="1" class="btn btn-primary">Anmelden</button>
+                
+        @if (Model.LoginFailed)
+        {
+            <div class="alert alert-warning">Login failed</div>
+        }
+
     </form>
 </div>
