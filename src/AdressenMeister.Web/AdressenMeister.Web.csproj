@@ -2,10 +2,12 @@
 
     <PropertyGroup>
         <TargetFramework>net5.0</TargetFramework>
+        <Nullable>enable</Nullable>
     </PropertyGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\..\modules\datenmeister-new\src\DatenMeister.AdminUserSettings\DatenMeister.AdminUserSettings.csproj" />
+      <ProjectReference Include="..\..\modules\datenmeister-new\src\DatenMeister.Integration.DotNet\DatenMeister.Integration.DotNet.csproj" />
     </ItemGroup>
 
     <ItemGroup>

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DatenMeister.Integration.DotNet;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -32,6 +33,10 @@ namespace AdressenMeister.Web
             
             services.AddRazorPages();
             
+            services.AddSingleton(GiveMe.Scope.WorkspaceLogic);
+            services.AddSingleton(GiveMe.Scope.ScopeStorage);
+
+            services.AddSingleton(new AdressenMeisterLogic(GiveMe.Scope.WorkspaceLogic, GiveMe.Scope.ScopeStorage));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
