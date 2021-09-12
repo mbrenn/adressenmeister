@@ -76,6 +76,8 @@ namespace AdressenMeister.Web
                 createdUser.set(nameof(AdressenUser.isPhoneVisible), user.isPhoneVisible);
             }
 
+            AdressenExtent.elements().add(createdUser);
+
             return createdUser;
         }
 
