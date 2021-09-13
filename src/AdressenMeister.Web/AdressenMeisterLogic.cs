@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using AdressenMeister.Web.Models;
+using BurnSystems;
 using DatenMeister.Core;
 using DatenMeister.Core.EMOF.Implementation;
 using DatenMeister.Core.EMOF.Interface.Identifiers;
@@ -108,6 +109,50 @@ namespace AdressenMeister.Web
                 .WhenPropertyHasValue(nameof(AdressenUser.email), email)
                 .OfType<IElement>()
                 .FirstOrDefault();
+        }
+
+        /// <summary>
+        /// Adds a series of users by their email addresses. If there is already a user with that e-mailaddress,
+        /// the existing user is returned
+        /// </summary>
+        /// <param name="emailConcat">Semicolon-Separated list of email-Addresses</param>
+        /// <returns>Enumeration of elements of new or existing users</returns>
+        public IEnumerable<IElement> AddUsersByEMails(string emailConcat)
+        {
+            var emails = emailConcat.Split(
+                ';',
+                StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+
+            foreach (var email in emails)
+            {
+                yield return AddUsersByEMail(email);
+            }
+        }
+
+        /// <summary>
+        /// Adds a new user by the email
+        /// </summary>
+        /// <param name="email">E-Mail to be added</param>
+        /// <returns>The already existing or newly created email-address</returns>
+        private IElement AddUsersByEMail(string email)
+        {
+            if (AdressenExtent == null) throw new InvalidOperationException();
+
+            var found = AdressenExtent.elements()
+                .WhenPropertyHasValue(nameof(AdressenUser.email), email)
+                .OfType<IElement>()
+                .FirstOrDefault();
+
+            if (found != null)
+            {
+                return found;
+            }
+
+            found = CreateUser();
+            found.set(nameof(AdressenUser.email), email);
+            found.set(nameof(AdressenUser.secret), StringManipulation.SecureRandomString(32));
+
+            return found;
         }
     }
 }

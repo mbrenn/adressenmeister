@@ -76,5 +76,32 @@ namespace AdressenMeister.Tests
             var found2 = adressenMeisterLogic.GetUserByEMail("brenn@depon.nett");
             Assert.That(found2, Is.Null);
         }
+
+        [Test]
+        public void TestUsersByEmail()
+        {
+            var dm = GiveMe.DatenMeister(GetIntegrationSettings());
+            var adressenMeisterLogic = new AdressenMeisterLogic(dm.WorkspaceLogic, dm.ScopeStorage);
+
+            var foundBefore = adressenMeisterLogic.GetUserByEMail("brenn@depon.net");
+            Assert.That(foundBefore,Is.Null);
+            Assert.That(adressenMeisterLogic.AdressenExtent.elements().Count(), Is.EqualTo(0));
+            
+            var created = adressenMeisterLogic.AddUsersByEMails("brenn@depon.net;brenner@depon.net").ToList();
+            Assert.That(created.Count, Is.EqualTo(2));
+            Assert.That(adressenMeisterLogic.AdressenExtent.elements().Count(), Is.EqualTo(2));
+            
+            var found = adressenMeisterLogic.GetUserByEMail("brenn@depon.net");
+            Assert.That(found,Is.Not.Null);
+            
+            var created2 = adressenMeisterLogic.AddUsersByEMails("brenn@depon.net;brenner@depon.net").ToList();
+            Assert.That(created2.Count, Is.EqualTo(2));
+            
+            found = adressenMeisterLogic.GetUserByEMail("brenn@depon.net");
+            Assert.That(found,Is.Not.Null);
+            
+            Assert.That(adressenMeisterLogic.AdressenExtent.elements().Count(), Is.EqualTo(2));
+
+        }
     }
 }

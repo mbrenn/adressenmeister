@@ -23,5 +23,10 @@
         public bool isAddressVisible { get; set; }
 
         public bool isPhoneVisible { get; set; }
+        
+        /// <summary>
+        /// Gets or sets the secretkey to access the user
+        /// </summary>
+        public string secret { get; set; }
     }
 }
