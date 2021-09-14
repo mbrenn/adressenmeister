@@ -8,6 +8,8 @@ using DatenMeister.Core.EMOF.Implementation;
 using DatenMeister.Core.EMOF.Interface.Identifiers;
 using DatenMeister.Core.EMOF.Interface.Reflection;
 using DatenMeister.Core.Functions.Queries;
+using DatenMeister.Core.Helper;
+using DatenMeister.Core.Runtime.Copier;
 using DatenMeister.Core.Runtime.Workspaces;
 using DatenMeister.Extent.Manager.ExtentStorage;
 using DatenMeister.Types;
@@ -139,6 +141,8 @@ namespace AdressenMeister.Web
             if (AdressenExtent == null) throw new InvalidOperationException();
 
             var found = AdressenExtent.elements()
+                .GetAllDescendantsIncludingThemselves()
+                .WhenMetaClassIs(TypeUser)
                 .WhenPropertyHasValue(nameof(AdressenUser.email), email)
                 .OfType<IElement>()
                 .FirstOrDefault();
@@ -153,6 +157,47 @@ namespace AdressenMeister.Web
             found.set(nameof(AdressenUser.secret), StringManipulation.SecureRandomString(32));
 
             return found;
+        }
+
+        /// <summary>
+        /// Gets the complete data of all users and honors the visibility setting of each user.
+        /// </summary>
+        /// <returns>Enumeration of all visible data</returns>
+        public IEnumerable<IElement> GetPublicDataOfAllUsers()
+        {
+            if (AdressenExtent == null) throw new InvalidOperationException();
+            
+            var users = AdressenExtent.elements()
+                .GetAllDescendantsIncludingThemselves()
+                .WhenMetaClassIs(TypeUser)
+                .OfType<IElement>();
+
+            foreach (var user in users)
+            {
+                var copy = ObjectCopier.CopyForTemporary(user) as IElement
+                    ?? throw new InvalidOperationException("The copying has failed");
+
+                if (!copy.getOrDefault<bool>(nameof(AdressenUser.isNameVisible)))
+                {
+                    continue;
+                }
+
+                if (!copy.getOrDefault<bool>(nameof(AdressenUser.isAddressVisible)))
+                {
+                    copy.set(nameof(AdressenUser.street), string.Empty);
+                    copy.set(nameof(AdressenUser.zipcode), string.Empty);
+                    copy.set(nameof(AdressenUser.city), string.Empty);
+                    copy.set(nameof(AdressenUser.country), string.Empty);
+                }
+
+                if (!copy.getOrDefault<bool>(nameof(AdressenUser.isPhoneVisible)))
+                {
+                    copy.set(nameof(AdressenUser.phone), string.Empty);
+                }
+
+                yield return copy;
+            }
+            
         }
     }
 }
