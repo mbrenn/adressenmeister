@@ -27,6 +27,6 @@
         /// <summary>
         /// Gets or sets the secretkey to access the user
         /// </summary>
-        public string secret { get; set; }
+        public string? secret { get; set; }
     }
 }

@@ -2,11 +2,23 @@
 @using AdressenMeister.Web.Models
 @model AdminNew
 @{
-    ViewData["Title"] = "Admin-Bereich";
+    ViewData["Title"] = "Neue Benutzer einfügen";
     ViewBag.Mode = PageSection.Admin;
 }
 
 <div class="text-center">
-    <h1 class="display-4">Willkommen zu neuen Adressen:</h1>
-    <p>Dein Benutzerbereich</p>
+    <h1>Neuer Benutzer anlegen</h1>
+    <div>Trage die Liste der anzulegenden Nutzer als Semikolon-separierte Liste ein. </div>
+    <form method="POST">
+        <div class="form-group col-sm">
+            <textarea name="emails" id="emails" class="form-control" placeholder="Dein Name" rows="10"></textarea>
+        </div>
+        <button type="submit" name="login" value="1" class="btn btn-primary">Anlegen</button>
+
+        @if (Model.EMailsAdded != -1)
+        {
+            <div class="alert alert-info">@Model.EMailsAdded E-Mailadressen hinzugefügt.</div>
+        }
+
+    </form>
 </div>

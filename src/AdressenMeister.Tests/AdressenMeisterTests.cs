@@ -203,5 +203,25 @@ namespace AdressenMeister.Tests
             Assert.That(brenna.getOrDefault<bool>(nameof(AdressenUser.isPhoneVisible)), Is.EqualTo(false));
             Assert.That(brenna.getOrDefault<bool>(nameof(AdressenUser.isAddressVisible)), Is.EqualTo(true));
         }
+
+        [Test]
+        public void TestDeleteUser()
+        {
+            var dm = GiveMe.DatenMeister(GetIntegrationSettings());
+            var adressenMeisterLogic = new AdressenMeisterLogic(dm.WorkspaceLogic, dm.ScopeStorage);
+
+            var created = adressenMeisterLogic.AddUsersByEMails("brenn@depon.net;brenner@depon.net").ToList();
+            Assert.That(created.Count, Is.EqualTo(2));
+            Assert.That(adressenMeisterLogic.AdressenExtent.elements().Count(), Is.EqualTo(2));
+            
+            adressenMeisterLogic.DeleteUser("bren@depon.net");
+            Assert.That(adressenMeisterLogic.AdressenExtent.elements().Count(), Is.EqualTo(2));
+            
+            adressenMeisterLogic.DeleteUser("brenn@depon.net");
+            Assert.That(adressenMeisterLogic.AdressenExtent.elements().Count(), Is.EqualTo(1));
+            
+            adressenMeisterLogic.DeleteUser("brenn@depon.net");
+            Assert.That(adressenMeisterLogic.AdressenExtent.elements().Count(), Is.EqualTo(1));
+        }
     }
 }

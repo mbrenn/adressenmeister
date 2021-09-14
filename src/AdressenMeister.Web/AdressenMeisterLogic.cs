@@ -127,7 +127,11 @@ namespace AdressenMeister.Web
 
             foreach (var email in emails)
             {
-                yield return AddUsersByEMail(email);
+                var created = AddUsersByEMail(email);
+                if (created != null)
+                {
+                    yield return created;
+                }
             }
         }
 
@@ -136,9 +140,13 @@ namespace AdressenMeister.Web
         /// </summary>
         /// <param name="email">E-Mail to be added</param>
         /// <returns>The already existing or newly created email-address</returns>
-        private IElement AddUsersByEMail(string email)
+        private IElement? AddUsersByEMail(string email)
         {
             if (AdressenExtent == null) throw new InvalidOperationException();
+            if (!email.Contains('@'))
+            {
+                return null;
+            }
 
             var found = AdressenExtent.elements()
                 .GetAllDescendantsIncludingThemselves()
@@ -197,7 +205,30 @@ namespace AdressenMeister.Web
 
                 yield return copy;
             }
+        }
+        
+        /// <summary>
+        /// Deletes a user by email
+        /// </summary>
+        /// <param name="email">E-Mail to be used</param>
+        /// <returns>true, if the user is deleted</returns>
+        public bool DeleteUser(string email)
+        {
+            if (AdressenExtent == null) throw new InvalidOperationException();
             
+            var found = AdressenExtent.elements()
+                .GetAllDescendantsIncludingThemselves()
+                .WhenMetaClassIs(TypeUser)
+                .WhenPropertyHasValue(nameof(AdressenUser.email), email)
+                .OfType<IElement>()
+                .FirstOrDefault();
+
+            if (found != null)
+            {
+                return AdressenExtent.elements().remove(found);
+            }
+
+            return false;
         }
     }
 }
