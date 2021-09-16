@@ -56,7 +56,6 @@ namespace AdressenMeister.Web
 
             app.UseAuthentication();
             app.UseAuthorization();
-            
 
             app.UseEndpoints(endpoints => { endpoints.MapRazorPages(); });
         }

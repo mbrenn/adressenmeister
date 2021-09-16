@@ -15,31 +15,35 @@ namespace AdressenMeister.Web
     {
         public static void Main(string[] args)
         {
-            InitializeLogging();
-            
-            var assembly = Assembly.GetEntryAssembly() ??
-                           throw new InvalidOperationException("Entry assembly is null");
+            try
+            {
+                InitializeLogging();
 
-            var assemblyDirectoryName = Path.GetDirectoryName(assembly.Location) ??
-                                        throw new InvalidOperationException("Assembly Directory Name is null");
-            
-            // Loads the DatenMeister
-            var defaultSettings = GiveMe.GetDefaultIntegrationSettings();
-            defaultSettings.IsLockingActivated = true;
-            defaultSettings.DatabasePath = Path.Combine(assemblyDirectoryName, "data");
+                var assembly = Assembly.GetEntryAssembly() ??
+                               throw new InvalidOperationException("Entry assembly is null");
 
-            GiveMe.Scope = GiveMe.DatenMeister(defaultSettings);
-            
-            CreateHostBuilder(args).Build().Run();
-            
-            // Unloads the Datenmeister
-            GiveMe.TryGetScope()?.UnuseDatenMeister();
+                var assemblyDirectoryName = Path.GetDirectoryName(assembly.Location) ??
+                                            throw new InvalidOperationException("Assembly Directory Name is null");
+
+                // Loads the DatenMeister
+                var defaultSettings = GiveMe.GetDefaultIntegrationSettings();
+                defaultSettings.IsLockingActivated = true;
+                defaultSettings.DatabasePath = Path.Combine(assemblyDirectoryName, "data");
+
+                GiveMe.Scope = GiveMe.DatenMeister(defaultSettings);
+
+                CreateHostBuilder(args).Build().Run();
+            }
+            finally
+            {
+                // Unloads the Datenmeister
+                GiveMe.TryGetScope()?.UnuseDatenMeister();
+            }
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); });
-        
 
         private static void InitializeLogging()
         {

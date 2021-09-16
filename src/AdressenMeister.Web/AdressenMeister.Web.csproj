@@ -8,12 +8,22 @@
     <ItemGroup>
       <ProjectReference Include="..\..\modules\datenmeister-new\src\DatenMeister.AdminUserSettings\DatenMeister.AdminUserSettings.csproj" />
       <ProjectReference Include="..\..\modules\datenmeister-new\src\DatenMeister.Integration.DotNet\DatenMeister.Integration.DotNet.csproj" />
+      <ProjectReference Include="..\..\modules\datenmeister-new\src\DatenMeister.Mail\DatenMeister.Mail.csproj" />
     </ItemGroup>
 
     <ItemGroup>
       <None Update="DatenMeister.Settings.xmi">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="Embedded\mail.txt" />
+      <EmbeddedResource Include="Embedded\mail.txt" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="NETCore.MailKit" Version="2.0.3" />
     </ItemGroup>
 
 </Project>
