@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using AdressenMeister.Web;
 using AdressenMeister.Web.Models;
 using DatenMeister.Core;
@@ -33,6 +34,11 @@ namespace AdressenMeister.Tests
                 AllowNoFailOfLoading = false,
                 InitializeDefaultExtents = dropDatabase
             };
+
+            if (dropDatabase)
+            {
+                GiveMe.DropDatenMeisterStorage(integrationSettings);
+            }
 
             return integrationSettings;
         }
@@ -222,6 +228,64 @@ namespace AdressenMeister.Tests
             
             adressenMeisterLogic.DeleteUser("brenn@depon.net");
             Assert.That(adressenMeisterLogic.AdressenExtent.elements().Count(), Is.EqualTo(1));
+        }
+
+        [Test]
+        public void TestSetData()
+        {
+            var dm = GiveMe.DatenMeister(GetIntegrationSettings());
+            var adressenMeisterLogic = new AdressenMeisterLogic(dm.WorkspaceLogic, dm.ScopeStorage);
+
+            var user = adressenMeisterLogic.CreateUser();
+            user.set(nameof(AdressenUser.email), "brenn@depon.net");
+
+            var userdata = new AdressenUser
+            {
+                prename = "Martin",
+                name = "Brenn",
+                street = "Straße",
+                zipcode = "55130",
+                city = "Mainz",
+                country = "Deutschland",
+                email = "brenn@depon.net",
+                phone = "0123",
+                isAddressVisible = true,
+                isNameVisible = true,
+                isPhoneVisible = true
+            };
+            
+            adressenMeisterLogic.SetUserData("brenn@depon.net", userdata);
+
+            var foundUser = adressenMeisterLogic.GetUserByEMail("brenn@depon.net");
+            
+            Assert.That(foundUser.getOrDefault<string>(nameof(AdressenUser.name)), Is.EqualTo("Brenn"));
+            Assert.That(foundUser.getOrDefault<string>(nameof(AdressenUser.prename)), Is.EqualTo("Martin"));
+            Assert.That(foundUser.getOrDefault<string>(nameof(AdressenUser.street)), Is.EqualTo("Straße"));
+            Assert.That(foundUser.getOrDefault<string>(nameof(AdressenUser.zipcode)), Is.EqualTo("55130"));
+            Assert.That(foundUser.getOrDefault<string>(nameof(AdressenUser.city)), Is.EqualTo("Mainz"));
+            Assert.That(foundUser.getOrDefault<string>(nameof(AdressenUser.country)), Is.EqualTo("Deutschland"));
+            Assert.That(foundUser.getOrDefault<string>(nameof(AdressenUser.phone)), Is.EqualTo("0123"));
+            Assert.That(foundUser.getOrDefault<bool>(nameof(AdressenUser.isNameVisible)), Is.EqualTo(true));
+            Assert.That(foundUser.getOrDefault<bool>(nameof(AdressenUser.isPhoneVisible)), Is.EqualTo(true));
+            Assert.That(foundUser.getOrDefault<bool>(nameof(AdressenUser.isAddressVisible)), Is.EqualTo(true));
+
+            userdata.isAddressVisible = false;
+            userdata.isPhoneVisible = false;
+            userdata.isNameVisible = false;
+            
+            adressenMeisterLogic.SetUserData("brenn@depon.net", userdata);
+            
+            Assert.That(foundUser.getOrDefault<bool>(nameof(AdressenUser.isNameVisible)), Is.EqualTo(false));
+            Assert.That(foundUser.getOrDefault<bool>(nameof(AdressenUser.isPhoneVisible)), Is.EqualTo(false));
+            Assert.That(foundUser.getOrDefault<bool>(nameof(AdressenUser.isAddressVisible)), Is.EqualTo(false));
+
+            var builder = new StringBuilder();
+            for (var n = 0; n < 100; n++) builder.Append("LONG STRING IS SOOOO LONG!");
+            userdata.phone = builder.ToString();
+            
+            adressenMeisterLogic.SetUserData("brenn@depon.net", userdata);
+            var phoneNumber = foundUser.getOrDefault<string>(nameof(AdressenUser.phone));
+            Assert.That(phoneNumber.Length, Is.LessThan(101));
         }
     }
 }

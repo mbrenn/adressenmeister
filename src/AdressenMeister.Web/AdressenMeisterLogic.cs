@@ -57,6 +57,12 @@ namespace AdressenMeister.Web
             TypeUser = localTypeManager.AddInternalType("AdressenMeister", typeof(AdressenUser));
         }
 
+        public void StoreAllExtents()
+        {
+            var extentManager = new ExtentManager(_workspaceLogic, _scopeStorage);
+            extentManager.StoreAllExtents();
+        }
+
         public IElement CreateUser(AdressenUser? user = null)
         {
             if (AdressenExtent == null) throw new InvalidOperationException();
@@ -78,9 +84,11 @@ namespace AdressenMeister.Web
                 createdUser.set(nameof(AdressenUser.isAddressVisible), user.isAddressVisible);
                 createdUser.set(nameof(AdressenUser.isPhoneVisible), user.isPhoneVisible);
             }
+            
+            createdUser.set(nameof(AdressenUser.secret), StringManipulation.SecureRandomString(32));
 
             AdressenExtent.elements().add(createdUser);
-
+            StoreAllExtents();
             return createdUser;
         }
 
@@ -133,6 +141,8 @@ namespace AdressenMeister.Web
                     yield return created;
                 }
             }
+            
+            StoreAllExtents();
         }
 
         /// <summary>
@@ -162,7 +172,6 @@ namespace AdressenMeister.Web
 
             found = CreateUser();
             found.set(nameof(AdressenUser.email), email);
-            found.set(nameof(AdressenUser.secret), StringManipulation.SecureRandomString(32));
 
             return found;
         }
@@ -228,7 +237,43 @@ namespace AdressenMeister.Web
                 return AdressenExtent.elements().remove(found);
             }
 
+            StoreAllExtents();
             return false;
+        }
+
+        /// <summary>
+        /// Sets the user data
+        /// </summary>
+        /// <param name="email">E-Mail of the user to be modified</param>
+        /// <param name="user">User to be set, the user has to be known</param>
+        /// <returns>Flag, whether method was successful</returns>
+        public bool SetUserData(string email, AdressenUser user)
+        {
+            if (string.IsNullOrEmpty(email)) return false;
+            var foundUser = GetUserByEMail(email);
+            if (foundUser == null) return false;
+
+            foundUser.set(nameof(AdressenUser.name), Truncate(user.name, 100));
+            foundUser.set(nameof(AdressenUser.prename), Truncate(user.prename, 100));
+            foundUser.set(nameof(AdressenUser.street), Truncate(user.street, 100));
+            foundUser.set(nameof(AdressenUser.street), Truncate(user.street, 100));
+            foundUser.set(nameof(AdressenUser.zipcode), Truncate(user.zipcode, 100));
+            foundUser.set(nameof(AdressenUser.city), Truncate(user.city, 100));
+            foundUser.set(nameof(AdressenUser.country), Truncate(user.country, 100));
+            foundUser.set(nameof(AdressenUser.phone), Truncate(user.phone, 100));
+            foundUser.set(nameof(AdressenUser.isNameVisible), user.isNameVisible);
+            foundUser.set(nameof(AdressenUser.isAddressVisible), user.isAddressVisible);
+            foundUser.set(nameof(AdressenUser.isPhoneVisible), user.isPhoneVisible);
+            
+            StoreAllExtents();
+            return true;
+        }
+        
+        public static string Truncate(string? value, int maxLength )
+        {
+            if (string.IsNullOrEmpty(value)) { return string.Empty; }
+
+            return value.Substring(0, Math.Min(value.Length, maxLength));
         }
     }
 }

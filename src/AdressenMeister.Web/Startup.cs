@@ -24,7 +24,7 @@ namespace AdressenMeister.Web
                 .AddCookie(options =>
                 {
                     options.LoginPath = "/AdminLogin";
-                    options.AccessDeniedPath = "/UserLogin";
+                    options.AccessDeniedPath = "/AdminLogin";
                 });
             
             services.AddRazorPages();

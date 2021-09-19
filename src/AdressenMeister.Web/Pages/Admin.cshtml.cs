@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using AdressenMeister.Web.Models;
@@ -10,6 +11,7 @@ using DatenMeister.Core.EMOF.Interface.Reflection;
 using DatenMeister.Core.Helper;
 using DatenMeister.Mail;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using MimeKit;
 
@@ -32,13 +34,25 @@ namespace AdressenMeister.Web.Pages
             return _adressenMeisterLogic.GetAllUsers();
         }
 
-        public void OnGet()
+        public IActionResult OnGet()
         {
-            
+            // Just some security checks to be sure that the user is logged in
+            if (!User.IsInRole("Administrator"))
+            {
+                return Redirect("/Index");
+            }
+
+            return Page();
         }
 
-        public async Task OnPost(string submit)
+        public async Task<IActionResult> OnPost(string submit)
         {
+            // Just some security checks to be sure that the user is logged in
+            if (!User.IsInRole("Administrator"))
+            {
+                return Redirect("/Index");
+            }
+
             var templateStream = GetType().Assembly.GetManifestResourceStream(
                                      "AdressenMeister.Web.Embedded.mail.txt")
                                  ?? throw new InvalidOperationException("Mail Template not found");
@@ -62,9 +76,7 @@ namespace AdressenMeister.Web.Pages
                     if ( user == null) continue;
 
                     var link =
-                        HttpContext.Request.Scheme
-                        + "://"
-                        + HttpContext.Request.Host
+                        "http://adressen.schloss2001.de/"
                         + "/UserLogin/"
                         + emailAddress
                         + "/" 
@@ -80,7 +92,7 @@ namespace AdressenMeister.Web.Pages
                     var email = new MimeMessage
                     {
                         Sender = smtpLogic.Sender,
-                        Subject = "Abijahrgang 2001 - Deine Adressdaten",
+                        Subject = "Schloss-Gymnasium - Abi-Jahrgang 2001 - Deine Adressdaten",
                         Body = bodyBuilder.ToMessageBody()
                     };
                     
@@ -92,6 +104,8 @@ namespace AdressenMeister.Web.Pages
             }
             
             await smtpClient.DisconnectAsync(true);
+
+            return Page();
         }
     }
 }

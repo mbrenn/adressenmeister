@@ -1,13 +1,13 @@
-﻿@page "/UserLogin/{email}/{key}"
+﻿@page "/UserLogin/{email}/{secret}"
 @using AdressenMeister.Web.Models
 @model UserLogin
 @{
     ViewData["Title"] = "Benutzer-Bereich";
-    ViewBag.Mode = PageSection.User;
+    ViewBag.Mode = PageSection.None;
 }
 
 <div class="text-center">
     <h1 class="display-4">Benutzerlogin</h1>
-    <div>Du solltest einen Link per Mail erhalten haben. Ohne diesen Link kannst du dich nicht einloggen. </div>
-    
+    <div>Dein Link war leider nicht gültig. </div>
+    <div>Du kannst über <a href="mailto:brenn@depon.net">brenn@depon.net</a> einen neuen Link anfordern.</div>
 </div>
