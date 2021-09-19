@@ -21,9 +21,7 @@ namespace AdressenMeister.Web.Pages
         {
             [BindProperty] public string User { get; set; } = String.Empty;
 
-            [BindProperty]
-
-            public string Password { get; set; } = string.Empty;
+            [BindProperty] public string Password { get; set; } = string.Empty;
         }
 
         public async void OnPost(PostModel postModel)

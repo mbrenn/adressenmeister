@@ -153,7 +153,9 @@ namespace AdressenMeister.Web
         private IElement? AddUsersByEMail(string email)
         {
             if (AdressenExtent == null) throw new InvalidOperationException();
-            if (!email.Contains('@'))
+            
+            email = email.Trim();
+            if (!email.Contains('@') || string.IsNullOrEmpty(email))
             {
                 return null;
             }
@@ -187,7 +189,8 @@ namespace AdressenMeister.Web
             var users = AdressenExtent.elements()
                 .GetAllDescendantsIncludingThemselves()
                 .WhenMetaClassIs(TypeUser)
-                .OfType<IElement>();
+                .OfType<IElement>()
+                .OrderBy(x=>x.getOrDefault<string>(nameof(AdressenUser.name)));
 
             foreach (var user in users)
             {
@@ -199,17 +202,22 @@ namespace AdressenMeister.Web
                     continue;
                 }
 
+                if (!copy.getOrDefault<bool>(nameof(AdressenUser.isEmailVisible)))
+                {
+                    copy.set(nameof(AdressenUser.email), "");
+                }
+
                 if (!copy.getOrDefault<bool>(nameof(AdressenUser.isAddressVisible)))
                 {
-                    copy.set(nameof(AdressenUser.street), string.Empty);
-                    copy.set(nameof(AdressenUser.zipcode), string.Empty);
-                    copy.set(nameof(AdressenUser.city), string.Empty);
-                    copy.set(nameof(AdressenUser.country), string.Empty);
+                    copy.set(nameof(AdressenUser.street), "");
+                    copy.set(nameof(AdressenUser.zipcode), "");
+                    copy.set(nameof(AdressenUser.city), "");
+                    copy.set(nameof(AdressenUser.country), "");
                 }
 
                 if (!copy.getOrDefault<bool>(nameof(AdressenUser.isPhoneVisible)))
                 {
-                    copy.set(nameof(AdressenUser.phone), string.Empty);
+                    copy.set(nameof(AdressenUser.phone), "");
                 }
 
                 yield return copy;
@@ -262,6 +270,7 @@ namespace AdressenMeister.Web
             foundUser.set(nameof(AdressenUser.country), Truncate(user.country, 100));
             foundUser.set(nameof(AdressenUser.phone), Truncate(user.phone, 100));
             foundUser.set(nameof(AdressenUser.isNameVisible), user.isNameVisible);
+            foundUser.set(nameof(AdressenUser.isEmailVisible), user.isEmailVisible);
             foundUser.set(nameof(AdressenUser.isAddressVisible), user.isAddressVisible);
             foundUser.set(nameof(AdressenUser.isPhoneVisible), user.isPhoneVisible);
             

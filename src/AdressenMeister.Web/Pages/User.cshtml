@@ -9,10 +9,16 @@
 
 <div class="text-center">
     <h1 class="display-4">Der Abitur-Jahrgang 2001</h1>
+    <div class="container">
+        <div class="row justify-content-md-center">
+            <div class="col col-lg-2">
+                <a href="/UserChange"><input type="button" class="btn btn-primary" value="Deine Daten ändern" /></a><br />
+            </div>
+        </div>
+    </div>
     <table class="table table-striped">
                 <thead class="thead-light">
                 <tr>
-                    <th></th>
                     <th>Name</th>
                     <th>Vorname</th>
                     <th>Straße</th>
@@ -25,7 +31,6 @@
                 @foreach (var user in Model.GetUsers())
                 {
                     <tr>
-                        <td><input type="checkbox" name="email_@(user.getOrDefault<string>(nameof(AdressenUser.email)))" value="1"/></td>
                         <td>@(user.getOrDefault<string>(nameof(AdressenUser.name)))</td>
                         <td>@(user.getOrDefault<string>(nameof(AdressenUser.prename)))</td>
                         <td>@(user.getOrDefault<string>(nameof(AdressenUser.street)))</td>

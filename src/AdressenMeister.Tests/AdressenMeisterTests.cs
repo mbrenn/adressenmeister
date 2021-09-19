@@ -118,9 +118,9 @@ namespace AdressenMeister.Tests
             var dm = GiveMe.DatenMeister(GetIntegrationSettings());
             var adressenMeisterLogic = new AdressenMeisterLogic(dm.WorkspaceLogic, dm.ScopeStorage);
 
-            var created = adressenMeisterLogic.AddUsersByEMails("brenn@depon.net;noname@depon.net;noaddress@depon.net;nophone@depon.net").ToList();
+            var created = adressenMeisterLogic.AddUsersByEMails("brenn@depon.net;noname@depon.net;noaddress@depon.net;nophone@depon.net;noemail@depon.net").ToList();
             
-            Assert.That(created.Count, Is.EqualTo(4));
+            Assert.That(created.Count, Is.EqualTo(5));
             
             created[0].set(nameof(AdressenUser.name), "Brenn");
             created[0].set(nameof(AdressenUser.prename), "Martin");
@@ -132,6 +132,7 @@ namespace AdressenMeister.Tests
             created[0].set(nameof(AdressenUser.isNameVisible), true);
             created[0].set(nameof(AdressenUser.isPhoneVisible), true);
             created[0].set(nameof(AdressenUser.isAddressVisible), true);
+            created[0].set(nameof(AdressenUser.isEmailVisible), true);
             
             created[1].set(nameof(AdressenUser.name), "Brenner");
             created[1].set(nameof(AdressenUser.prename), "Martiner");
@@ -143,6 +144,7 @@ namespace AdressenMeister.Tests
             created[1].set(nameof(AdressenUser.isNameVisible), false);
             created[1].set(nameof(AdressenUser.isPhoneVisible), true);
             created[1].set(nameof(AdressenUser.isAddressVisible), true);
+            created[1].set(nameof(AdressenUser.isEmailVisible), true);
             
             created[2].set(nameof(AdressenUser.name), "Brenni");
             created[2].set(nameof(AdressenUser.prename), "Martini");
@@ -154,6 +156,7 @@ namespace AdressenMeister.Tests
             created[2].set(nameof(AdressenUser.isNameVisible), true);
             created[2].set(nameof(AdressenUser.isPhoneVisible), true);
             created[2].set(nameof(AdressenUser.isAddressVisible), false);
+            created[2].set(nameof(AdressenUser.isEmailVisible), true);
             
             created[3].set(nameof(AdressenUser.name), "Brenna");
             created[3].set(nameof(AdressenUser.prename), "Martina");
@@ -165,6 +168,19 @@ namespace AdressenMeister.Tests
             created[3].set(nameof(AdressenUser.isNameVisible), true);
             created[3].set(nameof(AdressenUser.isPhoneVisible), false);
             created[3].set(nameof(AdressenUser.isAddressVisible), true);
+            created[3].set(nameof(AdressenUser.isEmailVisible), true);
+            
+            created[4].set(nameof(AdressenUser.name), "ABrenno");
+            created[4].set(nameof(AdressenUser.prename), "Martino");
+            created[4].set(nameof(AdressenUser.street), "Straße 5");
+            created[4].set(nameof(AdressenUser.zipcode), "55134");
+            created[4].set(nameof(AdressenUser.city), "Mainzo");
+            created[4].set(nameof(AdressenUser.country), "Germany");
+            created[4].set(nameof(AdressenUser.phone), "05678");
+            created[4].set(nameof(AdressenUser.isNameVisible), true);
+            created[4].set(nameof(AdressenUser.isPhoneVisible), true);
+            created[4].set(nameof(AdressenUser.isAddressVisible), true);
+            created[4].set(nameof(AdressenUser.isEmailVisible), false);
 
             var users = adressenMeisterLogic.GetPublicDataOfAllUsers().ToList();
             var brenn = users.FirstOrDefault(x=>x.getOrDefault<string>(nameof(AdressenUser.email))=="brenn@depon.net");
@@ -177,6 +193,7 @@ namespace AdressenMeister.Tests
             Assert.That(brenn.getOrDefault<string>(nameof(AdressenUser.country)), Is.EqualTo("Germany"));
             Assert.That(brenn.getOrDefault<string>(nameof(AdressenUser.phone)), Is.EqualTo("0123"));
             Assert.That(brenn.getOrDefault<bool>(nameof(AdressenUser.isNameVisible)), Is.EqualTo(true));
+            Assert.That(brenn.getOrDefault<bool>(nameof(AdressenUser.isEmailVisible)), Is.EqualTo(true));
             Assert.That(brenn.getOrDefault<bool>(nameof(AdressenUser.isPhoneVisible)), Is.EqualTo(true));
             Assert.That(brenn.getOrDefault<bool>(nameof(AdressenUser.isAddressVisible)), Is.EqualTo(true));
             
@@ -193,6 +210,7 @@ namespace AdressenMeister.Tests
             Assert.That(brenni.getOrDefault<string>(nameof(AdressenUser.country)), Is.Null.Or.Empty);
             Assert.That(brenni.getOrDefault<string>(nameof(AdressenUser.phone)), Is.EqualTo("03456"));
             Assert.That(brenni.getOrDefault<bool>(nameof(AdressenUser.isNameVisible)), Is.EqualTo(true));
+            Assert.That(brenni.getOrDefault<bool>(nameof(AdressenUser.isEmailVisible)), Is.EqualTo(true));
             Assert.That(brenni.getOrDefault<bool>(nameof(AdressenUser.isPhoneVisible)), Is.EqualTo(true));
             Assert.That(brenni.getOrDefault<bool>(nameof(AdressenUser.isAddressVisible)), Is.EqualTo(false));
             
@@ -206,8 +224,27 @@ namespace AdressenMeister.Tests
             Assert.That(brenna.getOrDefault<string>(nameof(AdressenUser.country)), Is.EqualTo("Germany"));
             Assert.That(brenna.getOrDefault<string>(nameof(AdressenUser.phone)), Is.Null.Or.Empty);
             Assert.That(brenna.getOrDefault<bool>(nameof(AdressenUser.isNameVisible)), Is.EqualTo(true));
+            Assert.That(brenna.getOrDefault<bool>(nameof(AdressenUser.isEmailVisible)), Is.EqualTo(true));
             Assert.That(brenna.getOrDefault<bool>(nameof(AdressenUser.isPhoneVisible)), Is.EqualTo(false));
             Assert.That(brenna.getOrDefault<bool>(nameof(AdressenUser.isAddressVisible)), Is.EqualTo(true));
+            
+            var brenno = users.FirstOrDefault(x=>x.getOrDefault<string>(nameof(AdressenUser.name))=="ABrenno");
+            Assert.That(brenno, Is.Not.Null);
+            Assert.That(brenno.getOrDefault<string>(nameof(AdressenUser.name)), Is.EqualTo("ABrenno"));
+            Assert.That(brenno.getOrDefault<string>(nameof(AdressenUser.prename)), Is.EqualTo("Martino"));
+            Assert.That(brenno.getOrDefault<string>(nameof(AdressenUser.street)), Is.EqualTo("Straße 5"));
+            Assert.That(brenno.getOrDefault<string>(nameof(AdressenUser.zipcode)), Is.EqualTo("55134"));
+            Assert.That(brenno.getOrDefault<string>(nameof(AdressenUser.city)), Is.EqualTo("Mainzo"));
+            Assert.That(brenno.getOrDefault<string>(nameof(AdressenUser.country)), Is.EqualTo("Germany"));
+            Assert.That(brenno.getOrDefault<string>(nameof(AdressenUser.phone)), Is.EqualTo("05678"));
+            Assert.That(brenno.getOrDefault<string>(nameof(AdressenUser.email)), Is.Null.Or.Empty);
+            Assert.That(brenno.getOrDefault<bool>(nameof(AdressenUser.isNameVisible)), Is.EqualTo(true));
+            Assert.That(brenno.getOrDefault<bool>(nameof(AdressenUser.isEmailVisible)), Is.EqualTo(false));
+            Assert.That(brenno.getOrDefault<bool>(nameof(AdressenUser.isPhoneVisible)), Is.EqualTo(true));
+            Assert.That(brenno.getOrDefault<bool>(nameof(AdressenUser.isAddressVisible)), Is.EqualTo(true));
+            
+            // Check, that the ordering of the users is working
+            Assert.That(users[0].getOrDefault<string>(nameof(AdressenUser.name)), Is.EqualTo("ABrenno"));
         }
 
         [Test]

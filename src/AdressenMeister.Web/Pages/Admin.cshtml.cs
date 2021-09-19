@@ -76,8 +76,7 @@ namespace AdressenMeister.Web.Pages
                     if ( user == null) continue;
 
                     var link =
-                        "http://adressen.schloss2001.de/"
-                        + "/UserLogin/"
+                        "http://adressen.schloss2001.de/UserLogin/"
                         + emailAddress
                         + "/" 
                         + user.getOrDefault<string>(nameof(AdressenUser.secret));

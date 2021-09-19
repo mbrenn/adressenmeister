@@ -1,20 +1,19 @@
 ﻿Hallo, 
 
-du erhältst diese Mail, damit du deine Adresse in die Datenbank für den Abitour-Jahrgang '01 eintragen und freigeben kannst.
+während des letzten Abi-Treffen wurden wir gefragt, ob wir eure Adressen sammeln und verteilen können.
+Mit dieser Mail möchten wir euch die Möglichkeit dazu geben.
 
-Du kannst dich unter folgendem Link anmelden:
+Unter folgendem Link kannst du dich anmelden und hast folgende Möglichkeiten
+
 {{Link}}
 
-*Was bedeutet das?* 
-
-Während des letzten Abi-Treffen wurden wir mehrfach gefragt, ob wir eure Adressen sammeln und verteilen können. Leider ist dies so einfach nicht gestattet und vielleicht möchte es ja jemand von euch auch nicht. 
-
-Daher gibt es nun die Website und du kannst: 
-- Deine Adresse und Telefonnummer eingeben
-- Entscheiden, ob Andere aus der Gruppe die Adresse oder Telefonnummer sehen können. 
--- Falls du dich dagegen entscheidet, so sind sie nur für mich einsehbar und könnten für das nächste Abitreffen genutzt werden. 
-- Die Daten deiner ehemaligen Mitschülerinnen und Mitschüler einsehen, soweit sie die freigegeben haben. 
-
-Die Daten sind nur für die Personen sichtbar, die auch diesen Link haben. Daher leite den Link bitte nicht weiter. 
+1) Du kannst deine eigene Adresse und Telefonnummer eingeben. Damit bleibst du erreichbar für zukünftige Abi-Treffen. 
+2) Du kannst deine Daten freigeben, damit können dich die Mitglieder des Abijahrgangs direkt kontaktieren. 
+3) Machst du Nichts, so ist weder dein Name, noch deine E-Mail oder Adresse für Andere sichtbar. 
+4) Ohne den Login-Link ist auch kein Zugriff auf die Daten möglich. Daher leite den Link bitte nicht weiter. 
 
 Möchtest du deine E-Mailadresse aus der Datenbank entfernen, so schreibe mir bitte eine kurze Mail.
+
+Viele Grüße,
+Martin 
+

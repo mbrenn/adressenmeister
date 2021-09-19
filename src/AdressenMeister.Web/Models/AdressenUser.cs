@@ -20,6 +20,8 @@
         
         public bool isNameVisible { get; set; }
         
+        public bool isEmailVisible { get; set; }
+        
         public bool isAddressVisible { get; set; }
 
         public bool isPhoneVisible { get; set; }

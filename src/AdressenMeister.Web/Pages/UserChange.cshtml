@@ -10,90 +10,111 @@
     <h1 class="display-4">Deine Daten</h1>
     
                     
-            @if (Model.Success)
-            {
-                <div class="alert alert-info">Deine Daten wurden aktualisiert.</div>
-            }
+    @if (Model.Success)
+    {
+        <div class="alert alert-info">Deine Daten wurden aktualisiert.
+            <a href="/User"><input type="button" class="btn btn-primary" value="Zurück zur Übersicht" /></a><br /></div>
+    }
             
-            <form method="POST">
-                <div class="form-row">
-                    <div class="form-group col-md-3"></div> 
-                    <div class="form-group col-md-3">
-                        <label for="prename">Dein Vorname</label>
-                        <input asp-for="UserData.prename" id="prename" class="form-control" placeholder="Vorname"/>
-                    </div>
-                    <div class="form-group col-md-3">
-                        <label for="name">Dein Name</label>
-                        <input asp-for="UserData.name" id="name" class="form-control" placeholder="Name"/>
-                    </div>
+    <form method="POST">
+        <div class="form-row">
+            <div class="form-group col-md-3"></div> 
+            <div class="form-group col-md-3">
+                <label for="prename">Dein Vorname</label>
+                <input asp-for="UserData.prename" id="prename" class="form-control" placeholder="Vorname"/>
+            </div>
+            <div class="form-group col-md-3">
+                <label for="name">Dein Name</label>
+                <input asp-for="UserData.name" id="name" class="form-control" placeholder="Name"/>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-3"></div>
+            <div class="form-group col-md-6">
+                <div class="form-check">
+                    <input type="checkbox" asp-for="UserData.isNameVisible" id="isNameVisible"
+                           class="form-check-input" placeholder="Name"/>
+                    <label for="isNameVisible" class="form-check-label" >Dein Name soll für alle Mitglieder unseres Jahrgangs sichtbar sein?<br/>
+                        Markierst du das Häkchen nicht, so kann nur der Verwalter (Martin Brenn) der Liste deine
+                        Daten einsehen, weiterhin wird dein Eintrag komplett in der Adressenliste ausgeblendet.</label>
                 </div>
-                <div class="form-row">
-                    <div class="form-group col-md-3"></div>
-                    <div class="form-group col-md-6">
-                        <div class="form-check">
-                            <input type="checkbox" asp-for="UserData.isNameVisible" id="isNameVisible"
-                                   class="form-check-input" placeholder="Name"/>
-                            <label for="isNameVisible" class="form-check-label" >Dein Name soll für alle Mitglieder unseres Jahrgangs sichtbar sein?<br/>
-                                Markierst du das Häkchen nicht, so kann nur der Verwalter (Martin Brenn) der Liste deine
-                                Daten einsehen, weiterhin wird dein Eintrag komplett in der Adressenliste ausgeblendet.</label>
-                        </div>
-                    </div>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-3"></div>
+            <div class="form-group col-md-6">
+                <label for="street">Deine E-Mailadresse</label>
+                <input asp-for="UserData.email" id="email" class="form-control" readonly="readonly"/>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-3"></div>
+            <div class="form-group col-md-6">
+                <div class="form-check">
+                    <input type="checkbox" asp-for="UserData.isEmailVisible" id="isEmailVisible"
+                           class="form-check-input" placeholder="Name"/>
+                    <label for="isNameVisible" class="form-check-label" >Deine E-Mailadresse soll für alle Mitglieder unseres Jahrgangs sichtbar sein?</label>
                 </div>
-                <div class="form-row">
-                    <div class="form-group col-md-3"></div>
-                    <div class="form-group col-md-6">
-                        <label for="street">Deine Straße</label>
-                        <input asp-for="UserData.street" id="street" class="form-control" placeholder="Straße"/>
-                    </div>
-                </div>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-3"></div>
+            <div class="form-group col-md-6">
+                <label for="street">Deine Straße</label>
+                <input asp-for="UserData.street" id="street" class="form-control" placeholder="Straße"/>
+            </div>
+        </div>
                 
-                <div class="form-row">
-                    <div class="form-group col-md-3"></div>
-                    <div class="form-group col-md-2">
-                        <label for="zipcode">Deine Postleitzahl</label>
-                        <input asp-for="UserData.zipcode" id="zipcode" class="form-control" placeholder="PLZ"/>
-                    </div>
-                    <div class="form-group col-md-4">
-                        <label for="city">Dein Wohnort</label>
-                        <input asp-for="UserData.city" id="city" class="form-control" placeholder="Wohnort"/>
-                    </div>
-                </div>
+        <div class="form-row">
+            <div class="form-group col-md-3"></div>
+            <div class="form-group col-md-2">
+                <label for="zipcode">Deine Postleitzahl</label>
+                <input asp-for="UserData.zipcode" id="zipcode" class="form-control" placeholder="PLZ"/>
+            </div>
+            <div class="form-group col-md-4">
+                <label for="city">Dein Wohnort</label>
+                <input asp-for="UserData.city" id="city" class="form-control" placeholder="Wohnort"/>
+            </div>
+        </div>
                 
-                <div class="form-row">
-                    <div class="form-group col-md-3"></div>
-                    <div class="form-group col-md-6">
-                        <label for="country">Dein Land</label>
-                        <input asp-for="UserData.country" id="country" class="form-control" placeholder="Land"/>
-                    </div>
-                </div>
+        <div class="form-row">
+            <div class="form-group col-md-3"></div>
+            <div class="form-group col-md-6">
+                <label for="country">Dein Land</label>
+                <input asp-for="UserData.country" id="country" class="form-control" placeholder="Land"/>
+            </div>
+        </div>
                 
-                <div class="form-row">
-                    <div class="form-group col-md-3"></div>
-                    <div class="form-group col-md-6">
-                        <input type="checkbox" asp-for="UserData.isAddressVisible" id="isAddressVisible"
-                               class="form-check-input" placeholder="Name"/>
-                        <label for="isAddressVisible">Deine Adresse soll für alle Mitglieder unseres Jahrgangs sichtbar sein?
-                        </label>
-                    </div>
+        <div class="form-row">                    
+            <div class="form-group col-md-3"></div>
+            <div class="form-group col-md-6">
+                <div class="form-check">
+                    <input type="checkbox" asp-for="UserData.isAddressVisible" id="isAddressVisible"
+                           class="form-check-input" placeholder="Name"/>
+                    <label for="isAddressVisible">Deine Adresse soll für alle Mitglieder unseres Jahrgangs sichtbar sein?
+                    </label>
                 </div>
+            </div>
+        </div>
                 
-                <div class="form-row">
-                    <div class="form-group col-md-3"></div>
-                    <div class="form-group col-md-6">
-                        <label for="phone">Deine Telefonnummer</label>
-                        <input asp-for="UserData.phone" id="phone" class="form-control" placeholder="Telefon"/>
-                    </div>
+        <div class="form-row">
+            <div class="form-group col-md-3"></div>
+            <div class="form-group col-md-6">
+                <label for="phone">Deine Telefonnummer</label>
+                <input asp-for="UserData.phone" id="phone" class="form-control" placeholder="Telefon"/>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-3"></div>
+            <div class="form-group col-md-6">
+                <div class="form-check">
+                    <input type="checkbox" asp-for="UserData.isPhoneVisible" id="isPhoneVisible"
+                           class="form-check-input" placeholder="Name"/>
+                    <label for="isPhoneVisible">Deine Telefonnummer soll für alle Mitglieder unseres Jahrgangs sichtbar sein?
+                    </label>
                 </div>
-                <div class="form-row">
-                    <div class="form-group col-md-3"></div>
-                    <div class="form-group col-md-6">
-                        <input type="checkbox" asp-for="UserData.isPhoneVisible" id="isPhoneVisible"
-                               class="form-check-input" placeholder="Name"/>
-                        <label for="isPhoneVisible">Deine Adresse soll für alle Mitglieder unseres Jahrgangs sichtbar sein?
-                        </label>
-                    </div>
-                </div>
-                <button type="submit" class="btn btn-primary">Daten ändern</button>
-
-            </form>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Daten ändern</button>
+    </form>
 </div>
