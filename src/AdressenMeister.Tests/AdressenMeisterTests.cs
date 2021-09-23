@@ -8,6 +8,7 @@ using AdressenMeister.Web.Models;
 using DatenMeister.Core;
 using DatenMeister.Core.Helper;
 using DatenMeister.Integration.DotNet;
+using DatenMeister.Reports.Adoc;
 using NUnit.Framework;
 
 namespace AdressenMeister.Tests
@@ -265,6 +266,30 @@ namespace AdressenMeister.Tests
             
             adressenMeisterLogic.DeleteUser("brenn@depon.net");
             Assert.That(adressenMeisterLogic.AdressenExtent.elements().Count(), Is.EqualTo(1));
+        }
+
+        [Test]
+        public void TestLogin()
+        {
+            var dm = GiveMe.DatenMeister(GetIntegrationSettings());
+            var adressenMeisterLogic = new AdressenMeisterLogic(dm.WorkspaceLogic, dm.ScopeStorage);
+
+            var user = adressenMeisterLogic.CreateUser();
+            user.set(nameof(AdressenUser.email), "brenn@depon.net");
+            Assert.That(adressenMeisterLogic.IsLoginValid("brenn@depon.net", string.Empty)
+                == AdressenMeisterLogic.LoginResult.Wrong);
+            
+            user.set(nameof(AdressenUser.secret), "MySecret");
+            Assert.That(adressenMeisterLogic.IsLoginValid("brenn@depon.net", "MySecret") 
+                != AdressenMeisterLogic.LoginResult.Success);
+
+            var secret = adressenMeisterLogic.CreateSecret("brenn@depon.net", TimeSpan.FromMinutes(5));
+            Assert.That(adressenMeisterLogic.IsLoginValid("brenn@depon.net", secret)
+                == AdressenMeisterLogic.LoginResult.Success);
+            
+            user.set(nameof(AdressenUser.secretValidUntil), DateTime.Now - TimeSpan.FromSeconds(5));
+            Assert.That(adressenMeisterLogic.IsLoginValid("brenn@depon.net", secret)
+                == AdressenMeisterLogic.LoginResult.Expired);
         }
 
         [Test]

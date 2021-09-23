@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using AdressenMeister.Web.Models;
 using BurnSystems;
+using BurnSystems.Logging;
 using DatenMeister.Core;
 using DatenMeister.Core.EMOF.Implementation;
 using DatenMeister.Core.EMOF.Interface.Identifiers;
@@ -12,12 +16,16 @@ using DatenMeister.Core.Helper;
 using DatenMeister.Core.Runtime.Copier;
 using DatenMeister.Core.Runtime.Workspaces;
 using DatenMeister.Extent.Manager.ExtentStorage;
+using DatenMeister.Mail;
 using DatenMeister.Types;
+using MimeKit;
 
 namespace AdressenMeister.Web
 {
     public class AdressenMeisterLogic
     {
+        private ILogger logger = new ClassLogger(typeof(AdressenMeisterLogic));
+        
         private readonly IWorkspaceLogic _workspaceLogic;
         private readonly IScopeStorage _scopeStorage;
 
@@ -26,6 +34,9 @@ namespace AdressenMeister.Web
         public IUriExtent? AdressenExtent { get; private set; }
         
         public IElement? TypeUser { get; private set; }
+
+        public static TimeSpan SecretValidityAdminSending { get; } = TimeSpan.FromDays(2);
+        public static TimeSpan SecretValidityUserRequest { get; } = TimeSpan.FromMinutes(15);
 
         public AdressenMeisterLogic(IWorkspaceLogic workspaceLogic, IScopeStorage scopeStorage)
         {
@@ -283,6 +294,155 @@ namespace AdressenMeister.Web
             if (string.IsNullOrEmpty(value)) { return string.Empty; }
 
             return value.Substring(0, Math.Min(value.Length, maxLength));
+        }
+
+        public enum LoginResult
+        {
+            Success,
+            Wrong,
+            Expired
+        }
+        /// <summary>
+        /// Checks, if the login is valid. 
+        /// </summary>
+        /// <param name="email">E-Mail to be validated</param>
+        /// <param name="secret">Secret to be validated</param>
+        /// <returns></returns>
+        public LoginResult IsLoginValid(string? email, string? secret)
+        {
+            if (string.IsNullOrEmpty(email)
+                || string.IsNullOrEmpty(secret))
+            {
+                return LoginResult.Wrong;
+            }
+            
+            var user = GetUserByEMail(email);
+            if (user == null)
+            {
+                return  LoginResult.Wrong;
+            }
+
+            if (String.Compare(
+                    user.getOrDefault<string>(nameof(AdressenUser.secret)),
+                    secret,
+                    StringComparison.Ordinal) != 0
+                || string.IsNullOrEmpty(secret))
+            {
+                return  LoginResult.Wrong;
+            }
+
+            var validUntil = user.getOrDefault<DateTime>(nameof(AdressenUser.secretValidUntil));
+            if (validUntil <= DateTime.Now)
+            {
+                return LoginResult.Expired;
+            }
+
+            return LoginResult.Success;
+        }
+
+        /// <summary>
+        /// Creates a new secret to a user with a certain duration span
+        /// </summary>
+        /// <param name="email">E-Mail of the user</param>
+        /// <param name="validityDuration">Duration of the validity for the secret</param>
+        /// <returns>The created secret</returns>
+        public string CreateSecret(string email, TimeSpan validityDuration)
+        {
+            var user = GetUserByEMail(email);
+            if (user == null)
+            {
+                return string.Empty;
+            }
+
+            var secret = BurnSystems.StringManipulation.SecureRandomString(32);
+            user.set(nameof(AdressenUser.secret), secret);
+            user.set(nameof(AdressenUser.secretValidUntil), DateTime.Now + validityDuration);
+
+            return secret;
+        }
+
+        public enum SendEMailResult
+        {
+            Success,
+            AlreadySent, 
+            EMailNotKnown
+        }
+        
+        /// <summary>
+        /// Sends the email
+        /// </summary>
+        /// <param name="emails">List of emails to be sent</param>
+        /// <param name="timeSpan">Timespan for which the token is valid</param>
+        public async Task<SendEMailResult> SendEMails(List<string> emails, TimeSpan timeSpan)
+        {
+            var allEmailsSentOut = SendEMailResult.Success;
+            
+            var templateStream = GetType().Assembly.GetManifestResourceStream(
+                                     "AdressenMeister.Web.Embedded.mail.txt")
+                                 ?? throw new InvalidOperationException("Mail Template not found");
+            using var reader = new StreamReader(templateStream, Encoding.UTF8);
+            var mailTemplate = await reader.ReadToEndAsync();
+
+            var smtpLogic = new SmtpLogic();
+            var smtpClient = smtpLogic.GetConnectedClient();
+
+            foreach (var email in emails.Select(x=>x.Trim()))
+            {
+                if (!email.Contains('@') || string.IsNullOrEmpty(email))
+                {
+                    continue;
+                }
+                
+                CreateSecret(email, timeSpan);
+
+                var user = GetUserByEMail(email);
+                if (user == null)
+                {
+                    allEmailsSentOut = SendEMailResult.EMailNotKnown;
+                    continue;
+                };
+
+                // Checks, if the user just received another mail
+                var lastSent = DateTime.Now - TimeSpan.FromMinutes(1);
+                if (user.getOrDefault<DateTime>(nameof(AdressenUser.lastEMailSentOut))
+                    > lastSent)
+                {
+                    allEmailsSentOut = SendEMailResult.AlreadySent;
+                    continue;
+                }
+
+                user.set(nameof(AdressenUser.lastEMailSentOut), DateTime.Now);
+                
+                // Ok, now send out
+                var link =
+                    "http://adressen.schloss2001.de/UserLogin/"
+                    + email
+                    + "/"
+                    + user.getOrDefault<string>(nameof(AdressenUser.secret));
+
+                var mailText = mailTemplate.Replace("{{Link}}", link);
+
+                var bodyBuilder = new BodyBuilder
+                {
+                    TextBody = mailText
+                };
+
+                var emailMessage = new MimeMessage
+                {
+                    Sender = smtpLogic.Sender,
+                    Subject = "Schloss-Gymnasium - Abi-Jahrgang 2001 - Deine Adressdaten",
+                    Body = bodyBuilder.ToMessageBody()
+                };
+
+                emailMessage.To.Add(MailboxAddress.Parse(email));
+                await smtpClient.SendAsync(emailMessage);
+
+                logger.Info($"Sending mail to: {email}");
+            }
+
+            await smtpClient.DisconnectAsync(true);
+
+            return allEmailsSentOut;
         }
     }
 }

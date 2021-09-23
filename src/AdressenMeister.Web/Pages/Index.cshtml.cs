@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.RazorPages;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 
 namespace AdressenMeister.Web.Pages
@@ -12,8 +13,16 @@ namespace AdressenMeister.Web.Pages
             _logger = logger;
         }
 
-        public void OnGet()
+        public IActionResult OnGet()
         {
+            if (User.IsInRole("User"))
+            {
+                return new RedirectResult("/User");
+            }
+            else
+            {
+                return new RedirectResult("/UserLogin");
+            }
         }
     }
 }

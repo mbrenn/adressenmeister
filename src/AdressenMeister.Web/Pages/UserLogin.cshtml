@@ -1,4 +1,4 @@
-﻿@page "/UserLogin/{email}/{secret}"
+﻿@page "/UserLogin/{email?}/{secret?}"
 @using AdressenMeister.Web.Models
 @model UserLogin
 @{
@@ -8,6 +8,44 @@
 
 <div class="text-center">
     <h1 class="display-4">Benutzerlogin</h1>
-    <div>Dein Link war leider nicht gültig. </div>
-    <div>Du kannst über <a href="mailto:brenn@depon.net">brenn@depon.net</a> einen neuen Link anfordern.</div>
+    @if (Model.LoginInvalid)
+    {
+        <div class="alert alert-warning">Dein Link war leider nicht gültig.</div>
+    }
+    
+    @if (Model.LoginInvalidExpired)
+    {
+        <div class="alert alert-warning">Dein Link ist leider abgelaufen.</div>
+    }
+    
+    @if (Model.LoginAlreadySent)
+    {
+        <div class="alert alert-warning">Dir wurde bereits in der letzten Minute eine Mail gesandt.</div>
+    }
+    
+    @if (Model.LoginEmailInvalid)
+    {
+        <div class="alert alert-warning">Deine angegebene E-Mailadresse war leider ungültig oder nicht bekannt.</div>
+    }
+    
+    @if (Model.LoginSent)
+    {
+        <div class="alert alert-info">Du solltest einen Login-Link erhalten haben.</div>
+    }
+    
+    <div><p>Bitte gebe im untenstehenden Feld deine E-Mailadresse ein. Du erhältst darauf per E-Mail einen Link
+        über den du dich 15 Minuten lang anmelden kannst.<p></div>
+    
+    <form method="POST">
+        <div class="form-row">
+            <div class="form-group col-md-3"></div> 
+            <div class="form-group col-md-6">
+                <label for="email">Deine E-Mailadresse</label>
+                <input asp-for="PostModel.Email" id="email" class="form-control" placeholder="E-Mail"/>
+            </div>
+        </div>
+    
+        <button type="submit" class="btn btn-primary">Link versenden</button>
+    </form>
+    
 </div>

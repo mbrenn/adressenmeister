@@ -21,11 +21,11 @@
                 <tr>
                     <th>Name</th>
                     <th>Vorname</th>
+                    <th>Telefonnummer</th>
+                    <th>E-Mail</th>
                     <th>Straße</th>
                     <th>Postleitzahl</th>
                     <th>Stadt</th>
-                    <th>Telefonnummer</th>
-                    <th>E-Mail</th>
                 </tr>
                 </thead>
                 @foreach (var user in Model.GetUsers())
@@ -33,11 +33,11 @@
                     <tr>
                         <td>@(user.getOrDefault<string>(nameof(AdressenUser.name)))</td>
                         <td>@(user.getOrDefault<string>(nameof(AdressenUser.prename)))</td>
+                        <td>@(user.getOrDefault<string>(nameof(AdressenUser.phone)))</td>
+                        <td>@(user.getOrDefault<string>(nameof(AdressenUser.email)))</td>
                         <td>@(user.getOrDefault<string>(nameof(AdressenUser.street)))</td>
                         <td>@(user.getOrDefault<string>(nameof(AdressenUser.zipcode)))</td>
                         <td>@(user.getOrDefault<string>(nameof(AdressenUser.city)))</td>
-                        <td>@(user.getOrDefault<string>(nameof(AdressenUser.phone)))</td>
-                        <td>@(user.getOrDefault<string>(nameof(AdressenUser.email)))</td>
                     </tr>
                 }
             </table>

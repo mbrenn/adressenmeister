@@ -1,4 +1,6 @@
-﻿namespace AdressenMeister.Web.Models
+﻿using System;
+
+namespace AdressenMeister.Web.Models
 {
     public class AdressenUser
     {
@@ -30,5 +32,9 @@
         /// Gets or sets the secretkey to access the user
         /// </summary>
         public string? secret { get; set; }
+        
+        public DateTime secretValidUntil { get; set; }
+        
+        public DateTime lastEMailSentOut { get; set; }
     }
 }

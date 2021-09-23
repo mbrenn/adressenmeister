@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using AdressenMeister.Web;
 using AdressenMeister.Web.Models;
 using AdressenMeister.Web.Pages;
@@ -24,7 +25,10 @@ namespace AdressenMeister.Tests
             var user = adressenMeisterLogic.CreateUser();
             user.set(nameof(AdressenUser.email), "brenn@depon.net");
 
-            var secret = user.getOrDefault<string>(nameof(AdressenUser.secret));
+            var secret = adressenMeisterLogic.CreateSecret(
+                "brenn@depon.net", 
+                TimeSpan.FromSeconds(10));
+            
             Assert.That(secret, Is.Not.Null.Or.Empty);
 
             var result = await userLogin.OnGet("none@depon.net", "abc");
