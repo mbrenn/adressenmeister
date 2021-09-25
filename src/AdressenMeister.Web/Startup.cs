@@ -1,3 +1,4 @@
+using System;
 using DatenMeister.Integration.DotNet;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
@@ -25,6 +26,7 @@ namespace AdressenMeister.Web
                 {
                     options.LoginPath = "/AdminLogin";
                     options.AccessDeniedPath = "/AdminLogin";
+                    options.ExpireTimeSpan = TimeSpan.FromDays(1);
                 });
             
             services.AddRazorPages();

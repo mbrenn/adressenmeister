@@ -392,8 +392,6 @@ namespace AdressenMeister.Web
                 {
                     continue;
                 }
-                
-                CreateSecret(email, timeSpan);
 
                 var user = GetUserByEMail(email);
                 if (user == null)
@@ -410,6 +408,8 @@ namespace AdressenMeister.Web
                     allEmailsSentOut = SendEMailResult.AlreadySent;
                     continue;
                 }
+                
+                CreateSecret(email, timeSpan);
 
                 user.set(nameof(AdressenUser.lastEMailSentOut), DateTime.Now);
                 
